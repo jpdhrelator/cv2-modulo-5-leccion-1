@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M5 L1 — Actividad: POO en JavaScript</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:     #0b0b09;
+      --paper:   #f5f0e8;
+      --cream:   #ede8dc;
+      --gold:    #c8952a;
+      --gold-lt: #f0c040;
+      --rust:    #c0392b;
+      --slate:   #2c3e50;
+      --dim:     #7a7568;
+      --border:  #d5cfc2;
+
+      --c-clase:  #1a7a3c;
+      --c-herencia: #1a4a7a;
+      --c-poli:   #7a1a5a;
+      --c-encap:  #7a3a1a;
+      --c-json:   #3a1a7a;
+      --c-final:  #7a1a1a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ─── GRAIN TEXTURE ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: .6;
+    }
+
+    /* ─── MASTHEAD ─── */
+    header {
+      border-bottom: 3px double var(--ink);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .masthead-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 48px;
+      border-bottom: 1px solid var(--ink);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .masthead-main {
+      padding: 36px 48px 28px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      align-items: center;
+    }
+
+    .masthead-label {
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .masthead-label span { display: block; }
+    .masthead-label .pill {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 2px 10px;
+      border-radius: 2px;
+      font-size: 10px;
+      letter-spacing: .1em;
+      width: fit-content;
+    }
+
+    .masthead-title {
+      text-align: center;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      padding: 0 48px;
+    }
+
+    .masthead-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+
+    .masthead-title h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .masthead-title .subtitle {
+      font-size: 12px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-top: 8px;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+    }
+
+    .masthead-right {
+      text-align: right;
+    }
+
+    .masthead-right .big-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--border);
+      line-height: 1;
+    }
+
+    /* ─── MAIN LAYOUT ─── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+
+    /* ─── SECTION LABEL ─── */
+    .section-rule {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 48px 0 28px;
+    }
+
+    .section-rule::before,
+    .section-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--ink);
+    }
+
+    .section-rule h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ─── INTRO BOX ─── */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      margin-bottom: 40px;
+    }
+
+    .intro-cell {
+      background: var(--paper);
+      padding: 24px 28px;
+    }
+
+    .intro-cell h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      margin-bottom: 10px;
+    }
+
+    .intro-cell p, .intro-cell li { font-size: 13.5px; color: #3a3730; line-height: 1.65; }
+    .intro-cell ul {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .intro-cell ul li {
+      padding-left: 16px;
+      position: relative;
+    }
+    .intro-cell ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 11px;
+      top: 4px;
+      line-height: 1;
+    }
+
+    /* ─── GITHUB STEPS ─── */
+    .github-steps {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 28px 32px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .github-steps h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: var(--gold-lt);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .masthead-main { grid-template-columns: 1fr; text-align: center; gap: 16px; }
+      .masthead-title { border: none; padding: 0; }
+      .masthead-right { text-align: center; }
+      .masthead-label { align-items: center; }
+      .intro-grid { grid-template-columns: 1fr; }
+      .check-cols { grid-template-columns: 1fr; }
+      .final-reqs-grid { grid-template-columns: 1fr; }
+      .class-diagram { grid-template-columns: 1fr; }
+      .ex-tags { display: none; }
+      main { padding: 24px 16px; }
+      .container { padding: 0 16px 60px; }
+    }
+
+    .step {
+      border-left: 2px solid var(--gold);
+      padding-left: 12px;
+    }
+
+    .step .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .step .step-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      margin-bottom: 6px;
+    }
+
+    .step p {
+      font-size: 12px;
+      color: #b0a898;
+      line-height: 1.5;
+    }
+
+    .step code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      background: rgba(255,255,255,.08);
+      padding: 1px 5px;
+      border-radius: 2px;
+      color: var(--gold-lt);
+    }
+
+    /* ─── EXERCISE CARD ─── */
+    .exercise {
+      margin-bottom: 32px;
+      border: 1px solid var(--ink);
+      position: relative;
+    }
+
+    .ex-header {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      align-items: stretch;
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .ex-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .ex-title-wrap {
+      padding: 14px 20px;
+    }
+
+    .ex-title-wrap h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .ex-title-wrap .scenario {
+      font-size: 12px;
+      color: var(--dim);
+      font-style: italic;
+    }
+
+    .ex-tags {
+      padding: 14px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      border-left: 1px solid var(--ink);
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border: 1px solid currentColor;
+      border-radius: 2px;
+    }
+
+    .tag.clase    { color: var(--c-clase); }
+    .tag.herencia { color: var(--c-herencia); }
+    .tag.poli     { color: var(--c-poli); }
+    .tag.encap    { color: var(--c-encap); }
+    .tag.json     { color: var(--c-json); }
+
+    .ex-body {
+      padding: 20px 24px;
+      background: #faf7f2;
+    }
+
+    .context-box {
+      background: var(--cream);
+      border-left: 3px solid var(--ink);
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      font-size: 13.5px;
+      font-style: italic;
+      color: #4a4540;
+    }
+
+    .reqs h4 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .req-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .req-list li {
+      position: relative;
+      padding-left: 22px;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    .req-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      top: 3px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .req-list li strong { font-weight: 600; }
+
+    .req-list li .detail {
+      display: block;
+      font-size: 12px;
+      color: var(--dim);
+      margin-top: 3px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      background: rgba(0,0,0,.07);
+      padding: 1px 5px;
+      border-radius: 2px;
+    }
+
+    /* ─── HINT ─── */
+    .hint-wrap {
+      margin-top: 18px;
+      border-top: 1px dashed var(--border);
+      padding-top: 14px;
+    }
+
+    details {
+      border: 1px solid var(--border);
+      background: var(--cream);
+    }
+
+    summary {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--dim);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    summary::before {
+      content: '▸';
+      font-size: 10px;
+      transition: transform .2s;
+    }
+
+    details[open] summary::before { transform: rotate(90deg); }
+
+    .hint-content {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #4a4540;
+      line-height: 1.65;
+      border-top: 1px solid var(--border);
+    }
+
+    .hint-content ul {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .hint-content ul li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #4a4540;
+    }
+
+    .hint-content ul li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--gold);
+      font-size: 16px;
+      top: 0;
+      line-height: 1.4;
+    }
+
+    /* ─── EXPECTED OUTPUT BOX ─── */
+    .expected {
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: var(--ink);
+      color: #a0c8a0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      border-left: 3px solid var(--gold);
+    }
+
+    .expected .ex-label {
+      font-size: 10px;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 6px;
+      color: var(--gold);
+    }
+
+    /* ─── FINAL PROJECT ─── */
+    .final-project {
+      border: 3px solid var(--ink);
+      margin-top: 48px;
+      position: relative;
+    }
+
+    .final-project::before {
+      content: 'PROYECTO FINAL';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: var(--gold-lt);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .2em;
+      padding: 3px 18px;
+    }
+
+    .final-header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 32px 36px;
+    }
+
+    .final-header .final-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .final-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .final-header .final-desc {
+      font-size: 14px;
+      color: #b0a898;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .final-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    .final-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border: 1px solid rgba(255,255,255,.2);
+      color: #d0c8b8;
+    }
+
+    .final-body {
+      padding: 28px 36px;
+      background: #faf7f2;
+    }
+
+    .class-diagram {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 20px 0;
+    }
+
+    .class-box {
+      background: var(--paper);
+      padding: 14px 16px;
+    }
+
+    .class-box .cb-type {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 4px;
+    }
+
+    .class-box .cb-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .class-box .cb-name span {
+      font-size: 10px;
+      color: var(--gold);
+    }
+
+    .class-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .class-box ul li {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: #5a5550;
+    }
+
+    .class-box ul li.private { color: var(--c-encap); }
+    .class-box ul li.method  { color: var(--c-herencia); }
+    .class-box ul li.getter  { color: var(--c-poli); }
+    .class-box ul li.static  { color: var(--c-clase); }
+    .class-box ul li.inherited { color: var(--dim); font-style: italic; }
+
+    .final-reqs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .final-req-section h4 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    /* ─── DELIVERY CHECKLIST ─── */
+    .checklist {
+      margin-top: 48px;
+      border: 1px solid var(--ink);
+    }
+
+    .checklist-header {
+      background: var(--cream);
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .checklist-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+    }
+
+    .checklist-body {
+      padding: 20px 24px;
+    }
+
+    .check-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .check-group h4 {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 10px;
+    }
+
+    .check-group ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .check-group ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+    }
+
+    .check-group ul li::before {
+      content: '□';
+      font-size: 16px;
+      line-height: 1.2;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 3px double var(--ink);
+      padding: 16px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: .06em;
+    }
+
+    /* ─── UTILITIES ─── */
+    .divider-ornament {
+      text-align: center;
+      margin: 32px 0;
+      font-size: 18px;
+      color: var(--border);
+      letter-spacing: 8px;
+    }
+
+    .alert-note {
+      background: #fef9ec;
+      border: 1px solid var(--gold);
+      border-left: 4px solid var(--gold);
+      padding: 12px 16px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      color: #5a4a20;
+    }
+
+    .alert-note strong { color: #3a2a10; }
+
+  </style>
+</head>
+<body>
+
+<!-- ════════════ MASTHEAD ════════════ -->
+<header>
+  <div class="masthead-top">
+    <span>Módulo 5 · Lección 01</span>
+    <span>Talento Digital para Chile — Frontend 2026</span>
+    <span>Fecha de entrega: próxima clase</span>
+  </div>
+  <div class="masthead-main">
+    <div class="masthead-label">
+      <span class="pill">Actividad Práctica</span>
+      <span style="margin-top:8px">Concepto central:</span>
+      <span style="font-weight:600; color: var(--ink)">Orientación a<br>Objetos en JS</span>
+    </div>
+    <div class="masthead-title">
+      <h1>Ponlo en<br><em>Práctica</em></h1>
+      <div class="subtitle">6 mini ejercicios + 1 proyecto final</div>
+    </div>
+    <div class="masthead-right">
+      <div class="big-num">L1</div>
+      <div style="font-size:11px; color:var(--dim); letter-spacing:.06em; text-transform:uppercase; margin-top:4px">Lección uno</div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ════════════ INTRO ════════════ -->
+  <div class="section-rule" style="margin-top:40px"><h2>Instrucciones Generales</h2></div>
+
+  <div class="intro-grid">
+    <div class="intro-cell">
+      <h3>¿Qué vas a hacer?</h3>
+      <p>Vas a aplicar todo lo visto en clases sobre <strong>Programación Orientada a Objetos en JavaScript</strong>. No es copiar los ejemplos de clase — son escenarios nuevos que requieren que pienses y apliques los conceptos.</p>
+      <br>
+      <p>Cada mini ejercicio trabaja un concepto específico. El proyecto final los combina todos.</p>
+    </div>
+    <div class="intro-cell">
+      <h3>Reglas del juego</h3>
+      <ul>
+        <li>Cada ejercicio va en su propio archivo <code>.js</code></li>
+        <li>El proyecto final también en su propio archivo</li>
+        <li>Todo se sube a un repositorio en <strong>GitHub</strong></li>
+        <li>El repositorio se publica en <strong>GitHub Pages</strong></li>
+        <li>Puedes ver los pistas, pero no hay soluciones — piensa primero</li>
+        <li>Usa la consola del navegador o Node.js para probar</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ════════════ GITHUB ════════════ -->
+  <div class="section-rule"><h2>Configuración del Repositorio</h2></div>
+
+  <div class="github-steps">
+    <h3>Cómo publicar tu actividad en GitHub Pages</h3>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Crear repositorio</div>
+        <p>En GitHub, crea un repositorio nuevo llamado <code>m5-l1-poo</code>. Márcalo como público y agrega un README.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Estructura de carpetas</div>
+        <p>Crea una carpeta por ejercicio: <code>ej1/</code>, <code>ej2/</code> ... y <code>proyecto-final/</code>. Cada una con su <code>index.js</code> y un <code>index.html</code> que lo importe.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">HTML base</div>
+        <p>Copia este archivo como <code>index.html</code> en la raíz del repo. Será tu página principal con los links a cada ejercicio.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">GitHub Pages</div>
+        <p>Ve a <code>Settings → Pages</code> en tu repo. Elige la rama <code>main</code> y carpeta <code>/ (root)</code>. GitHub te dará una URL pública.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-note">
+    <strong>💡 Consejo general:</strong> Antes de escribir código, lee el ejercicio completo. Identifica qué clases necesitas, qué propiedades tendrán, qué métodos. Dibújalo en papel si hace falta. El código es lo último que escribes, no lo primero.
+  </div>
+
+  <!-- ════════════ EJERCICIOS ════════════ -->
+  <div class="section-rule"><h2>Mini Ejercicios</h2></div>
+
+  <!-- ─── EJ 1 ─── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-num">1</div>
+      <div class="ex-title-wrap">
+        <h3>La Clase Círculo</h3>
+        <div class="scenario">Escenario: una app de geometría necesita modelar círculos</div>
+      </div>
+      <div class="ex-tags">
+        <span class="tag clase">class</span>
+        <span class="tag clase">constructor</span>
+        <span class="tag clase">getter</span>
+        <span class="tag clase">static</span>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="context-box">
+        Estás construyendo una herramienta de geometría. Necesitas representar un círculo con sus cálculos principales. Un círculo se define únicamente por su radio.
+      </div>
+      <div class="reqs">
+        <h4>Lo que debes implementar</h4>
+        <ul class="req-list">
+          <li>
+            <strong>Clase <code>Circulo</code></strong> con un constructor que reciba el <code>radio</code>
+            <span class="detail">El radio es el único dato necesario para definir un círculo</span>
+          </li>
+          <li>
+            <strong>Getter <code>diametro</code></strong> que retorne el doble del radio
+            <span class="detail">Debe accederse sin paréntesis, como si fuera una propiedad</span>
+          </li>
+          <li>
+            <strong>Método <code>area()</code></strong> que calcule y retorne el área del círculo
+            <span class="detail">Fórmula: π × radio²</span>
+          </li>
+          <li>
+            <strong>Método <code>perimetro()</code></strong> que calcule y retorne la circunferencia
+            <span class="detail">Fórmula: 2 × π × radio</span>
+          </li>
+          <li>
+            <strong>Método <code>toString()</code></strong> que retorne una descripción en texto del círculo con sus medidas redondeadas a 2 decimales
+          </li>
+          <li>
+            <strong>Método estático <code>elMasGrande(c1, c2)</code></strong> que reciba dos círculos y retorne el que tiene mayor área
+            <span class="detail">¿Por qué este método va en static y no en la instancia?</span>
+          </li>
+          <li>
+            <strong>Prueba:</strong> crea al menos 3 círculos distintos, guárdalos en un array, imprímelos todos con <code>toString()</code> y luego imprime cuál tiene el mayor área
+          </li>
+        </ul>
+      </div>
+
+      <div class="expected">
+        <div class="ex-label">Salida esperada (ejemplo)</div>
+        Círculo(radio=5) → área: 78.54 | perímetro: 31.42 | diámetro: 10<br>
+        Círculo(radio=3) → área: 28.27 | perímetro: 18.85 | diámetro: 6<br>
+        Círculo(radio=8) → área: 201.06 | perímetro: 50.27 | diámetro: 16<br>
+        El más grande es: Círculo(radio=8)
+      </div>
+
+      <div class="hint-wrap">
+        <details>
+          <summary>💡 Pista — si estás atascado</summary>
+          <div class="hint-content">
+            <ul>
+              <li>JavaScript tiene <code>Math.PI</code> disponible nativamente — no necesitas declararlo.</li>
+              <li>Para redondear a 2 decimales, el método <code>.toFixed(2)</code> existe en todos los números. Retorna un string.</li>
+              <li>Un método <code>static</code> se llama sobre la clase, no sobre un objeto. Piensa: <code>Circulo.elMasGrande(c1, c2)</code></li>
+              <li>Para encontrar el mayor en un array de más de 2, <code>Array.reduce()</code> es tu amigo.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EJ 2 ─── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-num">2</div>
+      <div class="ex-title-wrap">
+        <h3>Inventario de una Tienda</h3>
+        <div class="scenario">Escenario: un pequeño negocio necesita gestionar sus productos</div>
+      </div>
+      <div class="ex-tags">
+        <span class="tag clase">class</span>
+        <span class="tag clase">instancias</span>
+        <span class="tag clase">arrays</span>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="context-box">
+        Una tienda de ropa necesita un sistema básico para gestionar su inventario. Cada producto tiene datos propios pero todos comparten la misma lógica de negocio.
+      </div>
+      <div class="reqs">
+        <h4>Lo que debes implementar</h4>
+        <ul class="req-list">
+          <li>
+            <strong>Clase <code>Producto</code></strong> con: <code>nombre</code>, <code>precio</code>, <code>stock</code>, <code>categoria</code>
+          </li>
+          <li>
+            <strong>Método <code>hayStock()</code></strong> que retorne <code>true</code> si el stock es mayor a cero
+          </li>
+          <li>
+            <strong>Método <code>aplicarDescuento(porcentaje)</code></strong> que modifique el precio según el descuento
+            <span class="detail">Valida que el porcentaje esté entre 0 y 100, si no lo está imprime un error</span>
+          </li>
+          <li>
+            <strong>Método <code>vender(cantidad)</code></strong> que descuente del stock. Si no hay suficiente stock, no vende y avisa
+          </li>
+          <li>
+            <strong>Método <code>toString()</code></strong> con una descripción completa del producto
+          </li>
+          <li>
+            <strong>Prueba con un inventario real:</strong> crea al menos 5 productos distintos con diferentes categorías. Luego:
+            <span class="detail">① Filtra e imprime solo los que tienen stock · ② Ordénalos de menor a mayor precio · ③ Aplica 20% de descuento a todos los de la categoría "ropa" · ④ Imprime el precio promedio del inventario</span>
+          </li>
+        </ul>
+      </div>
+      <div class="hint-wrap">
+        <details>
+          <summary>💡 Pista — si estás atascado</summary>
+          <div class="hint-content">
+            <ul>
+              <li><code>Array.filter()</code> retorna un nuevo array con los elementos que cumplan la condición.</li>
+              <li><code>Array.sort((a, b) => a.precio - b.precio)</code> ordena de menor a mayor.</li>
+              <li>Para el promedio, primero suma todos los precios con <code>reduce()</code>, luego divide por la cantidad.</li>
+              <li>Para filtrar por categoría antes de aplicar el descuento, puedes encadenar <code>filter().forEach()</code>.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EJ 3 ─── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-num">3</div>
+      <div class="ex-title-wrap">
+        <h3>Tu Perfil de Desarrollador/a</h3>
+        <div class="scenario">Escenario: crea tu propio perfil como si fuera una tarjeta de presentación</div>
+      </div>
+      <div class="ex-tags">
+        <span class="tag clase">objeto literal</span>
+        <span class="tag clase">métodos</span>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="context-box">
+        Usando un objeto literal (sin clase), modela tu propio perfil de desarrollador/a. Este ejercicio es personal — los datos son tuyos.
+      </div>
+      <div class="reqs">
+        <h4>Lo que debes implementar</h4>
+        <ul class="req-list">
+          <li>
+            <strong>Objeto literal <code>miPerfil</code></strong> con al menos estas propiedades:
+            <span class="detail"><code>nombre</code>, <code>edad</code>, <code>ciudad</code>, <code>lenguajes</code> (array), <code>añosDeExperiencia</code>, <code>buscandoTrabajo</code> (boolean)</span>
+          </li>
+          <li>
+            <strong>Método <code>presentarse()</code></strong> que genere e imprima una presentación completa usando template literals
+          </li>
+          <li>
+            <strong>Método <code>agregarLenguaje(lenguaje)</code></strong> que agregue un lenguaje al array y confirme que fue agregado
+            <span class="detail">Verifica primero que el lenguaje no esté ya en el array</span>
+          </li>
+          <li>
+            <strong>Método <code>nivelExperiencia()</code></strong> que retorne <code>"Junior"</code>, <code>"Semi-Senior"</code> o <code>"Senior"</code> según los años de experiencia (tú defines los rangos)
+          </li>
+          <li>
+            <strong>Recorre e imprime</strong> todas las propiedades que no sean funciones
+          </li>
+          <li>
+            <strong>Bonus:</strong> Agrega 2 lenguajes nuevos con el método y luego imprímelos. Intenta agregar uno que ya existe y verifica que no se duplique.
+          </li>
+        </ul>
+      </div>
+      <div class="hint-wrap">
+        <details>
+          <summary>💡 Pista — si estás atascado</summary>
+          <div class="hint-content">
+            <ul>
+              <li>Para revisar si un elemento ya existe en un array: <code>array.includes(valor)</code> retorna <code>true</code> o <code>false</code>.</li>
+              <li>Para recorrer propiedades: <code>for (const clave in objeto)</code> y dentro filtrar con <code>typeof objeto[clave] !== "function"</code>.</li>
+              <li>Los template literals con backticks `` ` `` permiten saltos de línea reales — útil para presentaciones multilínea.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EJ 4 ─── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-num">4</div>
+      <div class="ex-title-wrap">
+        <h3>Flota de Vehículos</h3>
+        <div class="scenario">Escenario: una empresa de arriendo necesita modelar su flota</div>
+      </div>
+      <div class="ex-tags">
+        <span class="tag herencia">extends</span>
+        <span class="tag herencia">super</span>
+        <span class="tag herencia">herencia</span>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="context-box">
+        Una empresa de arriendo de vehículos tiene autos, motos y camiones. Todos comparten características comunes, pero cada tipo tiene sus propias particularidades. Modela esta jerarquía usando herencia.
+      </div>
+      <div class="reqs">
+        <h4>Lo que debes implementar</h4>
+        <ul class="req-list">
+          <li>
+            <strong>Clase base <code>Vehiculo</code></strong> con: <code>marca</code>, <code>modelo</code>, <code>año</code>, <code>velocidadMaxima</code>
+            <span class="detail">Método <code>describirse()</code> que imprima la información básica · Método <code>calcularAntiguedad()</code> que retorne cuántos años tiene el vehículo</span>
+          </li>
+          <li>
+            <strong>Clase <code>Auto extends Vehiculo</code></strong> con: <code>numeroPuertas</code>, <code>tipoCombustible</code>
+            <span class="detail">Sobreescribe <code>describirse()</code> para que incluya las puertas y el combustible, pero también muestre la info del padre (usa <code>super.describirse()</code>)</span>
+          </li>
+          <li>
+            <strong>Clase <code>Moto extends Vehiculo</code></strong> con: <code>tieneCarrito</code> (boolean)
+            <span class="detail">Sobreescribe <code>describirse()</code> indicando si tiene carrito lateral o no</span>
+          </li>
+          <li>
+            <strong>Clase <code>Camion extends Vehiculo</code></strong> con: <code>capacidadToneladasMaxima</code>
+            <span class="detail">Sobreescribe <code>describirse()</code> indicando la capacidad de carga</span>
+          </li>
+          <li>
+            <strong>Crea una flota</strong> de al menos 6 vehículos mezclando los tres tipos. Luego:
+            <span class="detail">① Imprime la descripción de cada uno · ② Filtra e imprime solo las motos · ③ Calcula la velocidad máxima promedio de toda la flota · ④ Encuentra el vehículo más antiguo</span>
+          </li>
+        </ul>
+      </div>
+      <div class="hint-wrap">
+        <details>
+          <summary>💡 Pista — si estás atascado</summary>
+          <div class="hint-content">
+            <ul>
+              <li><code>super(marca, modelo, año, velocidadMaxima)</code> en el constructor hijo llama al constructor del padre — es obligatorio antes de usar <code>this</code>.</li>
+              <li><code>super.describirse()</code> dentro de un método sobreescrito ejecuta la versión del padre. Luego puedes agregar más info específica del hijo.</li>
+              <li>Para filtrar por tipo: <code>flota.filter(v => v instanceof Moto)</code></li>
+              <li>El año actual en JS: <code>new Date().getFullYear()</code></li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EJ 5 ─── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-num">5</div>
+      <div class="ex-title-wrap">
+        <h3>Figuras Geométricas Polimórficas</h3>
+        <div class="scenario">Escenario: una app de dibujo necesita calcular el área de cualquier figura</div>
+      </div>
+      <div class="ex-tags">
+        <span class="tag poli">polimorfismo</span>
+        <span class="tag poli">override</span>
+        <span class="tag herencia">extends</span>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="context-box">
+        Una aplicación de dibujo vectorial maneja distintos tipos de figuras. El sistema necesita poder calcular el área de cualquier figura sin importar qué tipo sea — solo llamando al mismo método.
+      </div>
+      <div class="reqs">
+        <h4>Lo que debes implementar</h4>
+        <ul class="req-list">
+          <li>
+            <strong>Clase base <code>Figura</code></strong> con: <code>color</code>
+            <span class="detail">Método <code>area()</code> que lance un error: <code>throw new Error("area() debe implementarse en cada figura")</code> — así obligamos a las subclases a sobreescribirlo</span>
+          </li>
+          <li>
+            <strong>Método <code>describir()</code> en <code>Figura</code></strong> que imprima el tipo, color y área — este método puede llamar a <code>this.area()</code> internamente
+            <span class="detail">Si cada subclase tiene su propio <code>area()</code>, ¿qué imprimirá <code>describir()</code> para cada una?</span>
+          </li>
+          <li>
+            <strong>Clase <code>Triangulo extends Figura</code></strong> con: <code>base</code>, <code>altura</code>
+            <span class="detail">Sobreescribe <code>area()</code> con la fórmula correcta: (base × altura) / 2</span>
+          </li>
+          <li>
+            <strong>Clase <code>Rectangulo extends Figura</code></strong> con: <code>ancho</code>, <code>alto</code>
+            <span class="detail">Sobreescribe <code>area()</code></span>
+          </li>
+          <li>
+            <strong>Clase <code>Circulo extends Figura</code></strong> con: <code>radio</code>
+            <span class="detail">Sobreescribe <code>area()</code></span>
+          </li>
+          <li>
+            <strong>Crea un canvas</strong>: un array con al menos 6 figuras mezcladas. Itera con <code>forEach</code> y llama <code>describir()</code> en cada una. Al final, calcula e imprime el área total de todas.
+          </li>
+        </ul>
+      </div>
+      <div class="hint-wrap">
+        <details>
+          <summary>💡 Pista — si estás atascado</summary>
+          <div class="hint-content">
+            <ul>
+              <li>El método <code>describir()</code> del padre llama <code>this.area()</code>. Cuando se ejecuta en una instancia de <code>Triangulo</code>, JS busca <code>area()</code> en <code>Triangulo</code> primero. Eso es exactamente el polimorfismo en acción.</li>
+              <li>Para el área total: <code>canvas.reduce((suma, figura) => suma + figura.area(), 0)</code></li>
+              <li>Para saber el nombre del constructor de un objeto en tiempo de ejecución: <code>objeto.constructor.name</code></li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EJ 6 ─── -->
+  <div class="exercise">
+    <div class="ex-header">
+      <div class="ex-num">6</div>
+      <div class="ex-title-wrap">
+        <h3>Carrito de Compras Encapsulado</h3>
+        <div class="scenario">Escenario: un e-commerce necesita un carrito con lógica protegida</div>
+      </div>
+      <div class="ex-tags">
+        <span class="tag encap">#private</span>
+        <span class="tag encap">getter</span>
+        <span class="tag encap">encapsulamiento</span>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="context-box">
+        Un carrito de compras tiene reglas de negocio claras: no se puede modificar el total directamente, los ítems solo se agregan o eliminan por métodos controlados, y los cupones de descuento deben validarse. Implementa esto con encapsulamiento real.
+      </div>
+      <div class="reqs">
+        <h4>Lo que debes implementar</h4>
+        <ul class="req-list">
+          <li>
+            <strong>Clase <code>Carrito</code></strong> con dos campos privados: <code>#items</code> (array vacío) y <code>#descuento</code> (número, empieza en 0)
+          </li>
+          <li>
+            <strong>Getter <code>total</code></strong> que calcule la suma de todos los ítems aplicando el descuento
+            <span class="detail">Cada ítem tiene <code>nombre</code>, <code>precio</code> y <code>cantidad</code>. Total = (suma de precio × cantidad) × (1 - descuento/100)</span>
+          </li>
+          <li>
+            <strong>Getter <code>cantidadItems</code></strong> que retorne cuántos ítems distintos hay en el carrito
+          </li>
+          <li>
+            <strong>Método <code>agregar(nombre, precio, cantidad = 1)</code></strong>
+            <span class="detail">Valida que precio sea mayor a 0 y cantidad sea al menos 1. Si el producto ya existe (mismo nombre), suma la cantidad en vez de agregar uno nuevo.</span>
+          </li>
+          <li>
+            <strong>Método <code>eliminar(nombre)</code></strong> que remueva el ítem del carrito. Si no existe, avisa.
+          </li>
+          <li>
+            <strong>Método <code>aplicarCupon(codigo)</code></strong> que aplique descuento según el código:
+            <span class="detail"><code>"CLASE2026"</code> → 20% · <code>"MITAD"</code> → 50% · cualquier otro → sin descuento, imprime mensaje de error</span>
+          </li>
+          <li>
+            <strong>Método <code>verResumen()</code></strong> que imprima todos los ítems con su subtotal, el descuento aplicado y el total final
+          </li>
+          <li>
+            <strong>Prueba:</strong> agrega 4 productos, aplica un cupón, elimina uno, intenta agregar uno con precio negativo, imprime el resumen
+          </li>
+        </ul>
+      </div>
+      <div class="hint-wrap">
+        <details>
+          <summary>💡 Pista — si estás atascado</summary>
+          <div class="hint-content">
+            <ul>
+              <li>Para buscar si un ítem ya existe: <code>this.#items.find(item => item.nombre === nombre)</code> — si existe, modifica su cantidad directamente.</li>
+              <li>Para eliminar: <code>this.#items = this.#items.filter(item => item.nombre !== nombre)</code></li>
+              <li>En el getter <code>total</code>, usa <code>reduce</code> para sumar <code>precio × cantidad</code> de cada ítem, luego aplica el descuento al resultado final.</li>
+              <li>Campos privados con <code>#</code> requieren Chrome/Firefox moderno o Node 12+.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-ornament">— ✦ —</div>
+
+  <!-- ════════════ PROYECTO FINAL ════════════ -->
+  <div class="final-project">
+    <div class="final-header">
+      <div class="final-num">Proyecto Final · Ejercicio 7</div>
+      <h3>Sistema de Gestión<br>de una Librería</h3>
+      <div class="final-desc">
+        Este proyecto integra <em>todos</em> los conceptos de la lección: clases, herencia, polimorfismo, encapsulamiento y JSON. No hay un guión paso a paso — debes diseñar el sistema tú mismo/a siguiendo los requisitos.
+      </div>
+      <div class="final-tags">
+        <span class="final-tag">class + constructor</span>
+        <span class="final-tag">extends + super</span>
+        <span class="final-tag">polimorfismo</span>
+        <span class="final-tag">#encapsulamiento</span>
+        <span class="final-tag">JSON.stringify</span>
+        <span class="final-tag">JSON.parse</span>
+        <span class="final-tag">arrays + métodos</span>
+      </div>
+    </div>
+
+    <div class="final-body">
+      <div class="context-box" style="margin-bottom:20px">
+        Una librería independiente quiere digitalizar su gestión. Necesita un sistema que represente su colección de libros (físicos, digitales y enciclopedias), permita préstamos y devoluciones, y pueda exportar e importar su catálogo como JSON para compartir entre sucursales.
+      </div>
+
+      <!-- Diagrama de clases -->
+      <h4 style="font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); margin-bottom:12px">Arquitectura de clases que debes implementar</h4>
+
+      <div class="class-diagram">
+        <div class="class-box">
+          <div class="cb-type">Clase base</div>
+          <div class="cb-name">Libro</div>
+          <ul>
+            <li>titulo: string</li>
+            <li>autor: string</li>
+            <li>año: number</li>
+            <li>paginas: number</li>
+            <li>isbn: string</li>
+            <li class="getter">get edadEnAnios()</li>
+            <li class="method">esAntiguo(): boolean</li>
+            <li class="method">resumen(): string</li>
+          </ul>
+        </div>
+        <div class="class-box">
+          <div class="cb-type">Hereda de Libro</div>
+          <div class="cb-name">LibroDigital <span>extends Libro</span></div>
+          <ul>
+            <li>formatoArchivo: string</li>
+            <li>tamañoMB: number</li>
+            <li class="inherited">↑ hereda todo de Libro</li>
+            <li class="method">resumen() [override]</li>
+            <li class="method">tiempoDeLectura(ppm)</li>
+          </ul>
+        </div>
+        <div class="class-box">
+          <div class="cb-type">Hereda de Libro</div>
+          <div class="cb-name">Enciclopedia <span>extends Libro</span></div>
+          <ul>
+            <li>volumen: number</li>
+            <li>tematica: string</li>
+            <li class="inherited">↑ hereda todo de Libro</li>
+            <li class="method">resumen() [override]</li>
+          </ul>
+        </div>
+        <div class="class-box" style="grid-column: 1 / -1; border-top: 1px solid var(--border)">
+          <div class="cb-type">Clase con encapsulamiento</div>
+          <div class="cb-name">Biblioteca</div>
+          <ul style="display:grid; grid-template-columns: 1fr 1fr; gap: 3px 24px">
+            <li class="private">#coleccion: Libro[]</li>
+            <li class="private">#prestamos: string[] (isbns)</li>
+            <li class="getter">get totalLibros()</li>
+            <li class="getter">get librosPrestados()</li>
+            <li class="method">agregar(libro)</li>
+            <li class="method">prestar(isbn)</li>
+            <li class="method">devolver(isbn)</li>
+            <li class="method">buscarPorAutor(autor)</li>
+            <li class="method">buscarPorTipo(Clase)</li>
+            <li class="method">exportarCatalogo(): string JSON</li>
+            <li class="static">static importarDesdeJSON(json)</li>
+            <li class="method">generarReporte()</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="final-reqs-grid">
+        <div class="final-req-section">
+          <h4>Requisitos de las clases</h4>
+          <ul class="req-list">
+            <li>
+              <strong><code>Libro</code></strong> — clase base. El getter <code>edadEnAnios</code> calcula cuántos años tiene desde su publicación. <code>esAntiguo()</code> retorna <code>true</code> si fue publicado antes del año 2000. <code>resumen()</code> retorna un string con toda la info del libro.
+            </li>
+            <li>
+              <strong><code>LibroDigital</code></strong> — sobreescribe <code>resumen()</code> para incluir formato y tamaño. Agrega <code>tiempoDeLectura(palabrasPorMinuto = 250)</code> que estime las horas de lectura (asume 300 palabras por página).
+            </li>
+            <li>
+              <strong><code>Enciclopedia</code></strong> — sobreescribe <code>resumen()</code> para incluir el volumen y la temática.
+            </li>
+          </ul>
+        </div>
+
+        <div class="final-req-section">
+          <h4>Requisitos de Biblioteca</h4>
+          <ul class="req-list">
+            <li>
+              <strong><code>agregar(libro)</code></strong> — valida que el parámetro sea una instancia de <code>Libro</code> (usa <code>instanceof</code>). Si no lo es, lanza un error.
+            </li>
+            <li>
+              <strong><code>prestar(isbn)</code></strong> — mueve el isbn a <code>#prestamos</code>. Si ya está prestado o no existe, avisa. No puede prestarse dos veces.
+            </li>
+            <li>
+              <strong><code>buscarPorTipo(Clase)</code></strong> — ej: <code>biblioteca.buscarPorTipo(LibroDigital)</code> retorna todos los libros de ese tipo.
+            </li>
+            <li>
+              <strong><code>exportarCatalogo()</code></strong> — retorna un string JSON con todos los libros de <code>#coleccion</code>.
+            </li>
+            <li>
+              <strong><code>static importarDesdeJSON(json)</code></strong> — parsea el JSON, crea instancias de <code>Libro</code> básicas y retorna una nueva <code>Biblioteca</code> con esos libros.
+            </li>
+            <li>
+              <strong><code>generarReporte()</code></strong> — imprime: total libros, cuántos prestados, cuántos por tipo, el más antiguo y el más nuevo.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:24px; border-top:1px dashed var(--border); padding-top:20px">
+        <h4 style="font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); margin-bottom:12px">Script de prueba que tu código debe poder ejecutar</h4>
+        <ul class="req-list">
+          <li>Crea una instancia de <code>Biblioteca</code></li>
+          <li>Agrega al menos <strong>8 libros</strong> mezclando los 3 tipos (mínimo 3 de cada tipo base, 2 digitales, 2 enciclopedias)</li>
+          <li>Intenta agregar algo que no sea un libro y verifica que falle correctamente</li>
+          <li>Presta 3 libros distintos por isbn</li>
+          <li>Devuelve 1 de los prestados e intenta prestar el mismo dos veces</li>
+          <li>Busca todos los libros de un autor específico e imprímelos</li>
+          <li>Busca todos los <code>LibroDigital</code> y para cada uno imprime el tiempo estimado de lectura</li>
+          <li>Llama a <code>exportarCatalogo()</code>, guarda el resultado en una variable e imprímelo</li>
+          <li>Usa ese JSON para crear una nueva biblioteca con <code>importarDesdeJSON()</code> e imprime su total de libros</li>
+          <li>Genera el reporte completo de la biblioteca original</li>
+        </ul>
+      </div>
+
+      <div class="hint-wrap" style="margin-top:24px">
+        <details>
+          <summary>💡 Pista — orientación general (no es la solución)</summary>
+          <div class="hint-content">
+            <ul>
+              <li><strong>Diseña antes de codear.</strong> Dibuja en papel las 4 clases, sus propiedades y relaciones. ¿Qué hereda quién? ¿Qué es privado?</li>
+              <li><code>exportarCatalogo()</code> puede ser tan simple como <code>JSON.stringify(this.#coleccion)</code> — recuerda que stringify no incluye métodos, solo datos.</li>
+              <li>En <code>importarDesdeJSON()</code>, parseás con <code>JSON.parse()</code> y luego mapeas cada objeto a un <code>new Libro(...)</code>. No podrás recrear <code>LibroDigital</code> o <code>Enciclopedia</code> sin guardar el tipo en el JSON — eso es un problema interesante de diseño.</li>
+              <li>Para el tiempo de lectura: <code>páginas × 300 palabras / palabrasPorMinuto</code> = minutos. Convierte a horas y minutos para mostrarlo bien.</li>
+              <li>El método <code>generarReporte()</code> puede usar <code>buscarPorTipo()</code> internamente — no dupliques lógica.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ CHECKLIST ════════════ -->
+  <div class="checklist">
+    <div class="checklist-header">
+      <h3>Lista de Entrega</h3>
+      <span style="font-size:12px; color:var(--dim); margin-left:auto">Antes de enviar el link de tu repo, verifica esto</span>
+    </div>
+    <div class="checklist-body">
+      <div class="check-cols">
+        <div class="check-group">
+          <h4>Archivos y código</h4>
+          <ul>
+            <li>Ejercicio 1 — <code>ej1/index.js</code> funcionando</li>
+            <li>Ejercicio 2 — <code>ej2/index.js</code> funcionando</li>
+            <li>Ejercicio 3 — <code>ej3/index.js</code> funcionando</li>
+            <li>Ejercicio 4 — <code>ej4/index.js</code> funcionando</li>
+            <li>Ejercicio 5 — <code>ej5/index.js</code> funcionando</li>
+            <li>Ejercicio 6 — <code>ej6/index.js</code> funcionando</li>
+            <li>Proyecto final — <code>proyecto-final/index.js</code> completo</li>
+            <li>Cada carpeta tiene su <code>index.html</code> que carga el JS</li>
+          </ul>
+        </div>
+        <div class="check-group">
+          <h4>GitHub y publicación</h4>
+          <ul>
+            <li>Repositorio público creado en GitHub</li>
+            <li>Nombre del repo: <code>m5-l1-poo</code></li>
+            <li>README con tu nombre y descripción del proyecto</li>
+            <li>GitHub Pages activado y funcionando</li>
+            <li>URL de GitHub Pages compartida con el docente</li>
+            <li>Todos los archivos commiteados (no solo el proyecto final)</li>
+            <li>El <code>index.html</code> raíz tiene links a cada ejercicio</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer>
+  <span>Módulo 5 · Lección 01 · POO en JavaScript</span>
+  <span style="letter-spacing:.15em">✦</span>
+  <span>Talento Digital para Chile — Frontend 2026</span>
+</footer>
+
+</body>
+</html>
